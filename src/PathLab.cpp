@@ -5,4 +5,8 @@ namespace minigit {
 std::filesystem::path metadataDirectory(const std::filesystem::path& root){
     return root / ".minigit";
 }
+
+std::filesystem::path HeadFile(const std::filesystem::path& repoRoot) {
+    return metadataDirectory(repoRoot) / "HEAD";
+}
 } // namespace minigit
