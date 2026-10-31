@@ -22,6 +22,7 @@ if(!testingWriting)
 string txt;
 ifstream file(filepath);
 file >> txt;
+file.close();
   
 if (txt == "Created")
 {
