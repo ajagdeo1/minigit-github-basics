@@ -40,6 +40,25 @@ int main() {
     if(!check(nestedMetadataPath.parent_path() == nestedRoot, "metadataDirectory should place .minigit below a nested repo root path")) {
         return 1;
     }
+    // Head path test
+    const std::filesystem::path headPath = minigit::HeadFile(root);
+
+    if(!check(headPath.filename() == "HEAD", "headFile should end with HEAD")) {
+        return 1;
+    }
+    if(!check(headPath.parent_path() == minigit::metadataDirectory(root), "HEAD should be directly inside the metadata directory")) {
+        return 1;
+    }
+
+    // Nested head path test
+    const std::filesystem::path nestedHeadPath = minigit::HeadFile(nestedRoot);
+
+    if(!check(nestedHeadPath.filename() == "HEAD", "nested headFile should end with HEAD")) {
+        return 1;
+    }
+    if(!check(nestedHeadPath.parent_path() == minigit::metadataDirectory(nestedRoot), "nested HEAD should be directly inside the metadata directory")) {
+        return 1;
+    }
 
     std::cout << "PathLab smoke check passed\n";
     return 0;
