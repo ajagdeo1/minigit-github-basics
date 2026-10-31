@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(minigit_paths src/PathLab.cpp sr/textFileWritter.cpp)
+add_library(minigit_paths src/PathLab.cpp sr/writingTextFile.cpp)
 target_include_directories(minigit_paths PUBLIC include)
 
 include(CTest)
