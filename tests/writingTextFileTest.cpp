@@ -35,6 +35,7 @@ cout << "Failed" << endl;
   filesystem::remove_all(test_folder);
   return 1;
 }
+}
 
 
 
