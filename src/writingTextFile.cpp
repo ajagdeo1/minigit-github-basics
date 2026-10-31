@@ -24,6 +24,7 @@ bool writeTextFile(const std::filesystem::path& filepath, const std::string& tex
     return false;
   }
   file << text;
+  file.close();
 
   if (!file)
   {
