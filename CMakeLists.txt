@@ -5,7 +5,13 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_library(minigit_paths src/PathLab.cpp src/writingTextFile.cpp src/readingTextFile.cpp)
+add_library(minigit_paths 
+src/PathLab.cpp 
+src/writingTextFile.cpp 
+src/readingTextFile.cpp 
+src/RepositoryPaths.cpp
+)
+
 target_include_directories(minigit_paths PUBLIC include)
 
 include(CTest)
@@ -19,4 +25,7 @@ if(BUILD_TESTING)
     add_executable(reading_text_file_test tests/readingTextFileTest.cpp)
     target_link_libraries(reading_text_file_test PRIVATE minigit_paths)
     add_test(NAME reading_text_file_test COMMAND reading_text_file_test)
+    add_executable(repository_paths_tests tests/RepositoryPathsTests.cpp)
+    target_link_libraries(repository_paths_tests PRIVATE minigit_paths)
+    add_test(NAME repository_paths_tests COMMAND repository_paths_tests)
 endif()
