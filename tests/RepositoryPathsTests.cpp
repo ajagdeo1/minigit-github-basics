@@ -22,7 +22,19 @@ int main(){
         if(path.metadataRoot() != root / ".minigit"){
             std::cerr << "Failure: metadataRoot() for " << root << '\n';
             failures++;
-        }   
+        }  
+        if(path.stageFile("notes.txt") != root / ".minigit" / "stage" / "notes.txt"){
+            std::cerr << "Failure: stageFile() for " << root << '\n';
+            failures++;
+        }
+        if(path.stageFile("docs/notes.txt") != root / ".minigit" / "stage" /"docs"/ "notes.txt"){
+            std::cerr << "Failure: stageFile() for  docs/notes.txt\n";
+            failures++;
+        }
+        if(path.stageFile("docs/notes.txt").filename() != "notes.txt"){
+            std::cerr << "Failure: stageFile() filename\n";
+            failures++;
+        }
     }
 
     if(failures != 0){
