@@ -13,4 +13,14 @@ namespace minigit {
     const std::filesystem::path& RepositoryPaths::metadataRoot() const {
         return metadataRoot_;
     }
+
+    //Issue 6 of Lab
+    std::filesystem::path RepositoryPaths::headFile() const {
+        return metadataRoot_ / "HEAD";
+    }
+
+    std::filesystem::path RepositoryPaths::indexFile() const {
+        return metadataRoot_ / "index.txt";
+    }
+
 } // namespace minigit
