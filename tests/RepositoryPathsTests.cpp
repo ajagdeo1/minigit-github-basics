@@ -2,6 +2,33 @@
 #include <filesystem>
 #include <iostream>
 
+int testCommitLocations(){
+    namespace fs = std::filesystem;
+    int failures = 0;
+
+    const fs::path root = fs::path("course") / "repo";
+    const minigit::RepositoryPaths paths(root);
+
+    if(paths.commitDirectory("3") != root / ".minigit" / "commits" / "3"){
+        std::cerr << "Failure: commitDirectory(\"3\")\n";
+        failures++;
+    }
+    if(paths.committedFile("3", "docs/notes.txt") != root / ".minigit" / "commits" / "3" / "files" / "docs" / "notes.txt"){
+        std::cerr << "Failure: committedFile(\"3\", \"docs/notes.txt\")\n";
+        failures++;
+    }
+    if(paths.committedFile("3", "a.txt").parent_path() != paths.commitDirectory("3") / "files"){
+        std::cerr << "Failure: committedFile(\"3\", \"a.txt\").parent_path()\n";
+        failures++;
+    }
+    if(fs::exists(paths.metadataRoot())){
+        std::cerr << "Failure: commit locations created something on disk\n";
+        failures++;
+    }
+
+    return failures;
+}
+
 int main(){
     
     namespace fs = std::filesystem;
@@ -24,7 +51,7 @@ int main(){
             failures++;
         }   
     }
-
+    failures += testCommitLocations();
     if(failures != 0){
         std::cerr << failures << "checks failed.\n";
         return 1;
