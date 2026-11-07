@@ -1,6 +1,6 @@
 #pragma once
+#include <string>
 #include <filesystem>
-
 namespace minigit{
 
     class RepositoryPaths {
@@ -9,6 +9,10 @@ namespace minigit{
         
             const std::filesystem::path& projectRoot() const;
             const std::filesystem::path& metadataRoot() const;
+            std::filesystem::path commitDirectory(const std::string& id) const;
+            std::filesystem::path committedFile(const std::string& id, const std::string& path) const;
+
+            std::filesystem::path stageFile(const std::string& path) const;
 
             //Issue 6 of Lab
             std::filesystem::path headFile() const;
