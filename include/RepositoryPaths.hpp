@@ -14,6 +14,10 @@ namespace minigit{
 
             std::filesystem::path stageFile(const std::string& path) const;
 
+            //Issue 6 of Lab
+            std::filesystem::path headFile() const;
+            std::filesystem::path indexFile() const;
+
         private:
             std::filesystem::path projectRoot_;
             std::filesystem::path metadataRoot_;

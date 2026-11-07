@@ -49,6 +49,26 @@ int main(){
         if(path.metadataRoot() != root / ".minigit"){
             std::cerr << "Failure: metadataRoot() for " << root << '\n';
             failures++;
+        }   
+        
+        //Issue 6 of Lab
+        if(path.headFile() != root / ".minigit" / "HEAD"){
+            std::cerr << "Failure: headFile() for " << root << '\n';
+            failures++;
+        }
+        if(path.indexFile() != root / ".minigit" / "index.txt"){
+            std::cerr << "Failure: indexFile() for " << root << '\n';
+            failures++;
+        }
+
+        if(path.headFile().parent_path() != path.metadataRoot()){
+            std::cerr << "Failure: headFile() parent path for " << root << '\n';
+            failures++;
+        }
+
+        if(path.indexFile().filename() != "index.txt"){
+            std::cerr << "Failure: indexFile() filename for " << root << '\n';
+            failures++;
         }  
         if(path.stageFile("notes.txt") != root / ".minigit" / "stage" / "notes.txt"){
             std::cerr << "Failure: stageFile() for " << root << '\n';
