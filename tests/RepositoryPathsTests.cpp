@@ -68,6 +68,7 @@ int main(){
 
         if(path.indexFile().filename() != "index.txt"){
             std::cerr << "Failure: indexFile() filename for " << root << '\n';
+            failures++;
         }  
         if(path.stageFile("notes.txt") != root / ".minigit" / "stage" / "notes.txt"){
             std::cerr << "Failure: stageFile() for " << root << '\n';
