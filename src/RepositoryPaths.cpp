@@ -22,4 +22,9 @@ namespace minigit {
         return commitDirectory(id) / "files" / path;
     }
     
-} 
+
+
+    std::filesystem::path RepositoryPaths::stageFile(const std::string& path) const {
+    return metadataRoot_ / "stage" / path;
+}
+} // namespace minigit
