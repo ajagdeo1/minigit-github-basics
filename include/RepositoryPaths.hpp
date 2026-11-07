@@ -14,6 +14,10 @@ namespace minigit{
 
             std::filesystem::path stageFile(const std::string& path) const;
 
+            //Validates a supplied file path returning a normalized path relative to project root.
+            // throws runtime_error for unsafe paths.
+            std::string safeRelativeFile(const std::string& argument) const;
+
         private:
             std::filesystem::path projectRoot_;
             std::filesystem::path metadataRoot_;

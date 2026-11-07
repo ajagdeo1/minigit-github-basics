@@ -10,6 +10,7 @@ src/PathLab.cpp
 src/writingTextFile.cpp 
 src/readingTextFile.cpp 
 src/RepositoryPaths.cpp
+src/SafeRelativeFile.cpp
 )
 
 target_include_directories(minigit_paths PUBLIC include)
@@ -28,4 +29,7 @@ if(BUILD_TESTING)
     add_executable(repository_paths_tests tests/RepositoryPathsTests.cpp)
     target_link_libraries(repository_paths_tests PRIVATE minigit_paths)
     add_test(NAME repository_paths_tests COMMAND repository_paths_tests)
-endif()
+    add_executable(safe_relative_file_tests tests/SafeRelativeFileTests.cpp)
+    target_link_libraries(safe_relative_file_tests PRIVATE minigit_paths)
+    add_test(NAME safe_relative_file_tests COMMAND safe_relative_file_tests)
+    endif()
