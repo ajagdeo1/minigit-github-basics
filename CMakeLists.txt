@@ -11,6 +11,7 @@ src/writingTextFile.cpp
 src/readingTextFile.cpp 
 src/RepositoryPaths.cpp
 src/SafeRelativeFile.cpp
+src/FileSystem.cpp
 )
 
 target_include_directories(minigit_paths PUBLIC include)
@@ -32,4 +33,7 @@ if(BUILD_TESTING)
     add_executable(safe_relative_file_tests tests/SafeRelativeFileTests.cpp)
     target_link_libraries(safe_relative_file_tests PRIVATE minigit_paths)
     add_test(NAME safe_relative_file_tests COMMAND safe_relative_file_tests)
+    add_executable(file_system_tests tests/FileSystemTests.cpp)
+    target_link_libraries(file_system_tests PRIVATE minigit_paths)
+    add_test(NAME file_system_tests COMMAND file_system_tests)
     endif()
