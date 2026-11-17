@@ -123,7 +123,34 @@ int main() {
     check(threw, "copy of a missing source is thrown");
     check(!fs::exists(targetMissing), "copy of a missing source does not create target file");
 
-    
+
+    // FS-4 addDirectories()
+    const fs::path nested = temp / "Demo" / "Dragon" / "Boo";
+    files.addDirectories(nested);
+    check(fs::is_directory(nested), "addDirectories() creates nested directories");
+
+    //Existing directories: addDirectories() does not throw or change them.
+    bool threw2 = false;
+    try {
+      files.addDirectories(nested);
+      } catch (const std::exception& e) {
+            threw2 = true;
+    }
+    check(!threw2, "addDirectories() does not throw when directories already exist");
+
+    //Regular file exists
+    const fs::path regularFile = temp / "regular.txt";
+    makeFile(regularFile, "Regular file.");
+    bool threw3 = false;
+    try {
+      files.addDirectories(regularFile);
+      } catch (const std::exception& e) {
+            threw3 = true;
+    }
+    check(threw3, "addDirectories() throws when a regular file exists at the path");
+    check(fs::is_regular_file(regularFile), "addDirectories() does not change a regular file at the path");
+
+
     std::error_code cleanupError;
     fs::remove_all(temp, cleanupError);
 

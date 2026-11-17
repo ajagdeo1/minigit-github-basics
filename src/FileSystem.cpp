@@ -46,4 +46,14 @@ std::optional<std::string> FileSystem::readBytes(const std::filesystem::path& pa
             throw std::runtime_error("Cannot write file: " + target.string());
         }
     }
+
+    // FS-4
+    void FileSystem::addDirectories(const std::filesystem::path& directory) const {
+        std::error_code error;
+        std::filesystem::create_directories(directory, error);
+
+        if (error || !std::filesystem::is_directory(directory, error)) {
+            throw std::runtime_error("Cannot create directory: " + directory.string());
+        }
+    }
 }
