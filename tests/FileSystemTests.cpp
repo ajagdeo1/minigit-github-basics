@@ -1,0 +1,81 @@
+#include "FileSystem.hpp"
+
+#include <chrono>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <string>
+
+namespace fs = std::filesystem;
+
+namespace {
+
+int failures = 0;
+
+void check(bool condition, const std::string& message) {
+    std::cout << (condition ? "  PASS  " : "  FAIL  ") << message << '\n';
+    if (!condition) {
+        ++failures;
+    }
+}
+
+// The tests create their files directly with std::ofstream,
+// because writeBytes() is a separate issue (FS-3).
+void makeFile(const fs::path& file, const std::string& bytes) {
+    std::ofstream output(file, std::ios::binary);
+    output.write(bytes.data(), static_cast<std::streamsize>(bytes.size()));
+}
+
+} // namespace
+
+int main() {
+    // A new folder for every run, removed again at the end.
+    const auto stamp = std::chrono::steady_clock::now().time_since_epoch().count();
+    const fs::path temp = fs::temp_directory_path() / ("minigit-fs1-tests-" + std::to_string(stamp));
+    fs::create_directories(temp);
+
+    // A const object: this only compiles if readBytes() is a const member function.
+    const minigit::FileSystem files{};
+
+    // Multiple lines come back exactly, newlines included.
+    const fs::path lines = temp / "lines.txt";
+    makeFile(lines, "line1\nline2\n");
+    const auto linesResult = files.readBytes(lines);
+    check(linesResult.has_value() && *linesResult == "line1\nline2\n",
+          "readBytes returns multiple lines exactly, newlines included");
+
+    // Binary mode: a Windows line ending is not changed.
+    const fs::path crlf = temp / "crlf.txt";
+    makeFile(crlf, "a\r\nb");
+    const auto crlfResult = files.readBytes(crlf);
+    check(crlfResult.has_value() && *crlfResult == "a\r\nb",
+          "readBytes keeps CR LF line endings unchanged (binary mode)");
+
+    // A zero byte in the middle of the file is kept.
+    const std::string withZero("a\0b", 3);
+    const fs::path zeroFile = temp / "zero.bin";
+    makeFile(zeroFile, withZero);
+    const auto zeroResult = files.readBytes(zeroFile);
+    check(zeroResult.has_value() && zeroResult->size() == 3 && *zeroResult == withZero,
+          "readBytes keeps a zero byte (same size and bytes)");
+
+    // An empty file has a value: the empty string.
+    const fs::path empty = temp / "empty.txt";
+    makeFile(empty, "");
+    const auto emptyResult = files.readBytes(empty);
+    check(emptyResult.has_value() && emptyResult->empty(),
+          "readBytes of an empty file returns \"\", not std::nullopt");
+
+    // Negative case: a missing file gives std::nullopt and creates nothing.
+    const fs::path missing = temp / "missing.txt";
+    check(!files.readBytes(missing).has_value(),
+          "readBytes of a missing file returns std::nullopt");
+    check(!fs::exists(missing),
+          "readBytes of a missing file does not create it");
+
+    std::error_code cleanupError;
+    fs::remove_all(temp, cleanupError);
+
+    std::cout << '\n' << failures << " failed\n";
+    return failures == 0 ? 0 : 1;
+}
