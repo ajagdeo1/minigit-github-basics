@@ -13,8 +13,7 @@ public:
    
     std::optional<std::string> readBytes(const std::filesystem::path& path) const;
 
-
-    void copy(const std::filesystem::path& source, const std::filesystem::path& target) const;
+    void addDirectories(const std::filesystem::path& directory) const;
 };
 
 } 
