@@ -30,6 +30,21 @@ std::optional<std::string> FileSystem::readBytes(const std::filesystem::path& pa
     }
     return contents.str();
 }
+// FS-3
+void FileSystem::writeBytes(const std::filesystem::path& path, const std::string& bytes) const {
+    std::ofstream output(path, std::ios::binary);
+
+    if (!output){
+        throw std::runtime_error("File cannot be open for writing: " + path.string());
+    }
+    output.write(bytes.data(), static_cast<std::streamsize>(bytes.size()));
+
+    if (!output){
+        throw std::runtime_error("Unable to write file: " + path.string());
+    }
+
+}
+
 
     // FS-4
     void FileSystem::addDirectories(const std::filesystem::path& directory) const {

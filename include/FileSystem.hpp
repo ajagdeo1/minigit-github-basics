@@ -13,6 +13,7 @@ public:
    
     std::optional<std::string> readBytes(const std::filesystem::path& path) const;
 
+    void writeBytes(const std::filesystem::path& path, const std::string& bytes) const;
     void addDirectories(const std::filesystem::path& directory) const;
 };
 
