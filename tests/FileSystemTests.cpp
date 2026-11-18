@@ -73,9 +73,63 @@ int main() {
     check(!fs::exists(missing),
           "readBytes of a missing file does not create it");
 
+    // FS-2: copy() copies a file exactly, creating the target if needed.
+    const fs::path source = temp / "source.txt";
+    const fs::path target = temp / "target.txt";
+    makeFile(source, "Testline1\nTestline2\n");
+    files.copy(source, target);
+    const std::optional<std::string> copyBin = files.readBytes(target);
+    check(copyBin.has_value() && *copyBin == "Testline1\nTestline2\n",
+          "copy() creates/copies the source file exactly to target file");
+    const std::optional<std::string> copyBin2 = files.readBytes(source);
+      check(copyBin2.has_value() && *copyBin2 == "Testline1\nTestline2\n",
+          "copy() does not change the source file");
+
+    //checks for exact byte content copy
+    const std::string track("Testline1\nTestline2\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0", 30);
+    const fs::path source2 = temp / "source2.txt";
+    const fs::path target2 = temp / "target2.txt";
+    makeFile(source2, track);
+    files.copy(source2, target2);
+    const std::optional<std::string> copyExactBin = files.readBytes(target2);
+    check(copyExactBin.has_value() && *copyExactBin == track,
+          "copy() keeps all byte contents the same including zero bytes");
+    
+    //Empty source file copy
+    const fs::path source3 = temp / "source3.txt";
+    const fs::path target3 = temp / "target3.txt";
+    makeFile(source3, "");
+    files.copy(source3, target3);
+    check(fs::exists(target3) && fs::file_size(target3) == 0,
+          "copy() creates an empty target file when source is empty");
+
+    //Copy file into itself
+    const fs::path source4 = temp / "source4.txt";
+    makeFile(source4, "Testline14\nTestline24\n");
+    files.copy(source4, source4);
+    const std::optional<std::string> copySelfBin = files.readBytes(source4);
+    check(copySelfBin.has_value() && *copySelfBin == "Testline14\nTestline24\n",
+          "copy() copies a file into itself without changing its contents");
+
+    //Negative case: missing source file
+    const fs::path missingSource = temp / "missingSource.txt";
+    const fs::path targetMissing = temp / "targetMissing.txt";
+    bool threw = false;
+    try {
+      files.copy(missingSource, targetMissing);
+      } catch (const std::exception& e) {
+            threw = true;
+    }
+    check(threw, "copy of a missing source is thrown");
+    check(!fs::exists(targetMissing), "copy of a missing source does not create target file");
+
+    
     std::error_code cleanupError;
     fs::remove_all(temp, cleanupError);
 
     std::cout << '\n' << failures << " failed\n";
     return failures == 0 ? 0 : 1;
+
+    
+
 }
