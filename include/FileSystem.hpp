@@ -14,6 +14,8 @@ public:
     std::optional<std::string> readBytes(const std::filesystem::path& path) const;
 
     void addDirectories(const std::filesystem::path& directory) const;
+    //FS-5
+    void replaceFile(const std::filesystem::path& preparedFile, const std::filesystem::path& target) const;
 };
 
 } 
