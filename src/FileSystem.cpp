@@ -31,22 +31,6 @@ std::optional<std::string> FileSystem::readBytes(const std::filesystem::path& pa
     return contents.str();
 }
 
-
-    // FS-2
-    void FileSystem::copy(const std::filesystem::path& source, const std::filesystem::path& target) const {
-        const std::string byte = readBytes(source).value();
-        std::ofstream destination(target, std::ios::binary | std::ios::trunc);
-        if (!destination) {
-            throw std::runtime_error("Cannot open file for writing: " + target.string());
-        }
-
-        destination.write(byte.data(), static_cast<std::streamsize>(byte.size()));
-        destination.flush();
-        if (!destination) {
-            throw std::runtime_error("Cannot write file: " + target.string());
-        }
-    }
-
     // FS-4
     void FileSystem::addDirectories(const std::filesystem::path& directory) const {
         std::error_code error;
