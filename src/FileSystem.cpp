@@ -42,7 +42,7 @@ void FileSystem::writeBytes(const std::filesystem::path& path, const std::string
     if (!output){
         throw std::runtime_error("Unable to write file: " + path.string());
     }
-}
+
 }
 
 
