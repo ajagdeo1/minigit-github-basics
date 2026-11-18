@@ -46,3 +46,13 @@ void FileSystem::writeBytes(const std::filesystem::path& path, const std::string
 }
 
 
+    // FS-4
+    void FileSystem::addDirectories(const std::filesystem::path& directory) const {
+        std::error_code error;
+        std::filesystem::create_directories(directory, error);
+
+        if (error || !std::filesystem::is_directory(directory, error)) {
+            throw std::runtime_error("Cannot create directory: " + directory.string());
+        }
+    }
+}

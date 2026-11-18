@@ -104,9 +104,41 @@ int main() {
     check(!fs::exists(missing),
           "readBytes of a missing file does not create it");
 
+    // FS-4 addDirectories()
+    const fs::path nested = temp / "Demo" / "Dragon" / "Boo";
+    files.addDirectories(nested);
+    check(fs::is_directory(nested), "addDirectories() creates nested directories");
+
+    //Existing directories: addDirectories() does not throw or change them.
+    bool threw2 = false;
+    try {
+      files.addDirectories(nested);
+      } catch (const std::exception& e) {
+            threw2 = true;
+    }
+    check(!threw2, "addDirectories() does not throw when directories already exist");
+    check(fs::is_directory(nested), "addDirectories() does not change existing directories");
+
+    //Regular file exists
+    const fs::path regularFile = temp / "regular.txt";
+    makeFile(regularFile, "Regular file.");
+    bool threw3 = false;
+    try {
+      files.addDirectories(regularFile);
+      } catch (const std::exception& e) {
+            threw3 = true;
+    }
+    check(threw3, "addDirectories() throws when a regular file exists at the path");
+    check(fs::is_regular_file(regularFile), "addDirectories() does not change a regular file at the path");
+
+
     std::error_code cleanupError;
     fs::remove_all(temp, cleanupError);
 
     std::cout << '\n' << failures << " failed\n";
     return failures == 0 ? 0 : 1;
+}
+
+    
+
 }
