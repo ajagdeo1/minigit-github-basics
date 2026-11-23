@@ -36,6 +36,37 @@ int main() {
 
     // A const object: this only compiles if readBytes() is a const member function.
     const minigit::FileSystem files{};
+    //FS3
+    const fs::path file = temp / "written.txt";
+    files.writeBytes(file, "1st line\n2nd line\n");
+    const auto result = files.readBytes(file);
+    check(result.has_value() && *result == "1st line\n2nd line\n",
+      "writeBytes writes multiple lines");
+
+    const fs::path replace = temp / "replace.txt";
+    makeFile(replace, "Old text");
+    files.writeBytes(replace, "New text");
+    const auto newResult = files.readBytes(replace);
+    check(newResult.has_value() && *newResult == "New text",
+      "writeBytes replaces old text");
+
+    const fs::path zero = temp / "zero-FS3.bin";
+    const std::string data("A\0B", 3);
+    files.writeBytes(zero, data);
+    const auto zeroFS3Result = files.readBytes(zero);
+    check(zeroFS3Result.has_value() && *zeroFS3Result == data,
+      "writeBytes keeps zero bytes");
+
+    const fs::path missingParentFile = temp / "missing" / "file.txt";
+    bool writeError = false;
+    try {
+        files.writeBytes(missingParentFile, "test");
+    }
+    catch (const std::exception&) {
+        writeError = true;
+    }
+    
+    check(writeError, "writeBytes reports an error when the parent directory is missing");
 
     // Multiple lines come back exactly, newlines included.
     const fs::path lines = temp / "lines.txt";
@@ -144,5 +175,9 @@ int main() {
 
     std::cout << '\n' << failures << " failed\n";
     return failures == 0 ? 0 : 1;
+}
 
 }
+    
+
+
