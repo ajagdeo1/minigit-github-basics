@@ -12,6 +12,8 @@ src/readingTextFile.cpp
 src/RepositoryPaths.cpp
 src/SafeRelativeFile.cpp
 src/FileSystem.cpp
+src/MiniGitRepository.cpp
+src/CommandLineApp.cpp
 )
 
 target_include_directories(minigit_paths PUBLIC include)
@@ -36,4 +38,11 @@ if(BUILD_TESTING)
     add_executable(file_system_tests tests/FileSystemTests.cpp)
     target_link_libraries(file_system_tests PRIVATE minigit_paths)
     add_test(NAME file_system_tests COMMAND file_system_tests)
+
+    add_executable(command_line_app_tests_ tests/CommandLineAppTests.cpp)
+    target_link_libraries(command_line_app_tests_ PRIVATE minigit_paths)
+    add_test(NAME command_line_app_tests_ COMMAND command_line_app_tests_)
+    add_executable(MiniGit_Repository_tests tests/MiniGitRepositoryTests.cpp)
+    target_link_libraries(MiniGit_Repository_tests PRIVATE minigit_paths)
+    add_test(NAME MiniGit_Repository_tests COMMAND MiniGit_Repository_tests)
     endif()
