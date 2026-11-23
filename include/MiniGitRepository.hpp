@@ -9,6 +9,8 @@ namespace minigit {
 class MiniGitRepository {
 public:
     explicit MiniGitRepository(const std::filesystem::path& projectRoot);
+    void requireRepository() const;
+    void initialize();
 
 private:
     RepositoryPaths PathTests_;
