@@ -131,14 +131,50 @@ int main() {
     check(threw3, "addDirectories() throws when a regular file exists at the path");
     check(fs::is_regular_file(regularFile), "addDirectories() does not change a regular file at the path");
 
+    // FS-5 ReplaceFile() replaces existing targets contents
+    const fs::path replaceTarget = temp / "replaceTarget.txt";
+    const fs::path preparedText = temp / "preparedText.txt";
+    makeFile(replaceTarget, "Old target bytes");
+    makeFile(preparedText, "New prepared bytes");
 
+    files.replaceFile(preparedText, replaceTarget);
+
+    const auto replacedResult = files.readBytes(replaceTarget);
+    check(replacedResult.has_value() && *replacedResult == "New prepared bytes", "replaceFile replaces the target's old bytes");
+
+    // FS-5 replaceFile() preserves every prepared byte, including null bytes
+    const fs::path binaryTarget = temp / "binaryTarget.bin";
+    const fs::path preparedBinary = temp / "preparedBinary.bin";
+    const std::string binaryBytes("A\0B", 3);
+
+    makeFile(binaryTarget, "Old bytes");
+    makeFile(preparedBinary, binaryBytes);
+
+    files.replaceFile(preparedBinary, binaryTarget);
+
+    const auto binaryResult = files.readBytes(binaryTarget);
+    check(binaryResult.has_value() && *binaryResult == binaryBytes, "replaceFile preserves exact prepared file bytes");
+
+    // FS-5 replaceFile() missing prepared file throws an exception without modifying target
+    const fs::path unchangedTarget = temp / "unchangedTarget.txt";
+    const fs::path missingPrepared = temp / "doesNotExist.txt";
+    makeFile(unchangedTarget, "Keep these bytes");
+
+    bool replaceThrew = false;
+    try{
+      files.replaceFile(missingPrepared, unchangedTarget);
+    } catch(const std::exception& e){
+      replaceThrew = true;
+    }
+
+    check(replaceThrew, "replaceFile throws an exception when the prepared file is missing");
+    const auto unchangedResult = files.readBytes(unchangedTarget);
+    check(unchangedResult.has_value() && *unchangedResult == "Keep these bytes", "replaceFile does not modify the target when the prepared file is missing");
     std::error_code cleanupError;
     fs::remove_all(temp, cleanupError);
 
     std::cout << '\n' << failures << " failed\n";
     return failures == 0 ? 0 : 1;
 }
-
-    
 
 
