@@ -12,8 +12,6 @@ src/readingTextFile.cpp
 src/RepositoryPaths.cpp
 src/SafeRelativeFile.cpp
 src/FileSystem.cpp
-src/MiniGitRepository.cpp
-src/CommandLineApp.cpp
 )
 
 target_include_directories(minigit_paths PUBLIC include)
