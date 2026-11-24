@@ -55,4 +55,14 @@ void FileSystem::writeBytes(const std::filesystem::path& path, const std::string
             throw std::runtime_error("Cannot create directory: " + directory.string());
         }
     }
+
+    // FS-5
+    void FileSystem::replaceFile(const std::filesystem::path& preparedFile, const std::filesystem::path& target) const{
+        std::error_code error;
+        std::filesystem::rename(preparedFile, target, error);
+
+        if(error){
+            throw std::runtime_error("Cannot replace file: " + preparedFile.string() + ": " + error.message());
+        }
+    }
 }
