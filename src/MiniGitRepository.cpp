@@ -28,4 +28,16 @@ namespace minigit {
     }
 }
 
+    void MiniGitRepository::initialize() {
+        std::error_code error;
+        if (std::filesystem::exists(PathTests_.metadataRoot(), error)) {
+            requireRepository();
+            throw std::runtime_error("repository already exists");
+        }
+
+        FileTests_.addDirectories(PathTests_.metadataRoot() / "stage");
+        FileTests_.addDirectories(PathTests_.metadataRoot() / "commits");
+        FileTests_.writeBytes(PathTests_.headFile(), "");
+        FileTests_.writeBytes(PathTests_.indexFile(), "");
+    }
 }
