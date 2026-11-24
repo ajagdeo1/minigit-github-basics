@@ -1,5 +1,8 @@
 #pragma once
 #include <filesystem>
+#include <iosfwd>
+#include <string>
+#include <vector>
 
 namespace minigit {
 
