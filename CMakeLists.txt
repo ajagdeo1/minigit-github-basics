@@ -16,7 +16,7 @@ src/CommandLineApp.cpp
 src/MiniGitRepository.cpp
 )
 
-add_executable(minigit src/main.cpp)
+add_executable(minigit src/Main.cpp)
 target_link_libraries(minigit PRIVATE minigit_paths)
 
 target_include_directories(minigit_paths PUBLIC include)
