@@ -54,4 +54,9 @@ if(BUILD_TESTING)
 
     add_test(NAME minigit_unknown_command COMMAND minigit frobnicate)
     set_tests_properties(minigit_unknown_command PROPERTIES WILL_FAIL TRUE)
+
+    # Build integration test.
+    add_executable(minigit_init_integration_tests tests/MiniGitIntegration.cpp)
+    # Pass the compilied minigit executable path to the test
+    add_test(NAME minigit_init_integration_tests COMMAND minigit_init_integration_tests $<TARGET_FILE:minigit>)
 endif()
