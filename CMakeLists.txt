@@ -51,4 +51,7 @@ if(BUILD_TESTING)
     add_executable(initialize_tests tests/InitializeTests.cpp)
     target_link_libraries(initialize_tests PRIVATE minigit_paths)
     add_test(NAME initialize_tests COMMAND initialize_tests)
-    endif()
+
+    add_test(NAME minigit_unknown_command COMMAND minigit frobnicate)
+    set_tests_properties(minigit_unknown_command PROPERTIES WILL_FAIL TRUE)
+endif()
